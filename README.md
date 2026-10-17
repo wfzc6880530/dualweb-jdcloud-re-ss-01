@@ -14,7 +14,7 @@
 ## 固件类型和刷机警告
 
 - `*-jdcloud_re-ss-01-initramfs-uImage.itb`：用于设备支持的临时启动/首次安装流程；不是常规升级镜像。
-- `*-jdcloud_re-ss-01-squashfs-sysupgrade.bin`：仅在设备已运行兼容的 OpenWrt/OpenWrt 时用于 sysupgrade。
+- `*-jdcloud_re-ss-01-squashfs-sysupgrade.bin`：仅在设备已运行兼容的 OpenWrt/ImmortalWrt 时用于 sysupgrade。
 - 首次刷机可能需要 U-Boot/TFTP；请严格按设备对应的官方说明操作，并提前准备恢复方案。
 - 不要在刷机前假定 OEM 原厂 Web 管理页面可直接接受 sysupgrade 镜像。
 
