@@ -13,10 +13,10 @@
 
 ## 固件类型和刷机警告
 
-- `*-jdcloud_re-ss-01-initramfs-uImage.itb`：用于设备支持的临时启动/首次安装流程；不是常规升级镜像。
-- `*-jdcloud_re-ss-01-squashfs-sysupgrade.bin`：仅在设备已运行兼容的 OpenWrt/ImmortalWrt 时用于 sysupgrade。
-- 首次刷机可能需要 U-Boot/TFTP；请严格按设备对应的官方说明操作，并提前准备恢复方案。
-- 不要在刷机前假定 OEM 原厂 Web 管理页面可直接接受 sysupgrade 镜像。
+- `*-jdcloud_re-ss-01-squashfs-sysupgrade.bin`：本工作流的主要输出，用于设备已运行兼容 OpenWrt 时的 sysupgrade。
+- 当前上游 Snapshot ImageBuilder 对此 profile 只生成 sysupgrade 镜像，不保证提供 `initramfs-uImage.itb`；工作流不会再因缺少 initramfs 而误报构建失败。
+- 本仓库不生成可直接用于原厂固件首次刷机的专用镜像。首次刷机可能需要 U-Boot/TFTP 或设备专用恢复流程；请按设备对应的官方说明操作，并提前准备恢复方案。
+- 不要假定 OEM 原厂 Web 管理页面可直接接受 sysupgrade 镜像。
 
 ## DualWeb 首页
 
