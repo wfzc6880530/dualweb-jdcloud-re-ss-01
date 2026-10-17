@@ -18,6 +18,7 @@ DUALWEB_REPO="${DUALWEB_REPO:-https://github.com/wfzc6880530/dualweb.git}"
 DUALWEB_REF="${DUALWEB_REF:-test/openbox-artifacts}"
 
 mkdir -p "$WORK" "$OUT"
+rm -f "$OUT"/*
 URL="${BASE}/${IB}"
 
 if [[ ! -s "$WORK/$IB" ]]; then
@@ -83,29 +84,33 @@ make -C "$IBDIR" image PROFILE="$PROFILE" PACKAGES="$PACKAGES" FILES="$IBDIR/fil
 echo "========== Validate firmware outputs =========="
 INITRAMFS="$(find "$OUT" -maxdepth 1 -type f -name '*jdcloud_re-ss-01-initramfs-uImage.itb' -print -quit)"
 SYSUPGRADE="$(find "$OUT" -maxdepth 1 -type f -name '*jdcloud_re-ss-01-squashfs-sysupgrade.bin' -print -quit)"
-if [[ -z "$INITRAMFS" || ! -s "$INITRAMFS" ]]; then
-  echo "ERROR: missing JDCloud initramfs image; inspect ImageBuilder output." >&2
-  find "$OUT" -maxdepth 1 -type f -printf '%f (%s bytes)\n' >&2
-  exit 1
-fi
+
+# The upstream ImageBuilder profile currently emits sysupgrade, not initramfs.
+# Treat initramfs as optional; a valid sysupgrade image is the required artifact.
 if [[ -z "$SYSUPGRADE" || ! -s "$SYSUPGRADE" ]]; then
   echo "ERROR: missing JDCloud sysupgrade image; inspect ImageBuilder output." >&2
   find "$OUT" -maxdepth 1 -type f -printf '%f (%s bytes)\n' >&2
   exit 1
 fi
+if [[ -n "$INITRAMFS" && -s "$INITRAMFS" ]]; then
+  echo "Optional initramfs image found: $INITRAMFS"
+else
+  echo "NOTE: ImageBuilder did not produce an initramfs image for this profile; sysupgrade image is present."
+fi
 
-# Retain only the two device-specific images plus metadata/checksums.
+# Retain the device sysupgrade image, optional initramfs, and useful metadata.
 find "$OUT" -maxdepth 1 -type f \
   ! -name '*jdcloud_re-ss-01-initramfs-uImage.itb' \
   ! -name '*jdcloud_re-ss-01-squashfs-sysupgrade.bin' \
   ! -name 'profiles.json' ! -name 'version.buildinfo' ! -name '*.manifest' \
-  ! -name 'sha256sums' -delete
+  ! -name '*.bom.cdx.json' ! -name 'sha256sums' -delete
+
 
 cp -f "$IBDIR/profiles.json" "$OUT/profiles.json" 2>/dev/null || true
 cp -f "$IBDIR/target/linux/qualcommax/ipq60xx/version.buildinfo" "$OUT/version.buildinfo" 2>/dev/null || true
 (
   cd "$OUT"
-  sha256sum * > SHA256SUMS.txt
+  find . -maxdepth 1 -type f ! -name 'SHA256SUMS.txt' -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS.txt
 )
 echo "Build complete:"
 find "$OUT" -maxdepth 1 -type f -printf '%f (%s bytes)\n'
