@@ -1,0 +1,8 @@
+# ImmortalWrt 25.12 APK package names for JDCloud RE-SS-01.
+# Nikki/Mihomo is installed by the DualWeb first-boot service from its official feed.
+base-files ca-bundle ca-certificates curl wget-ssl busybox uci uclient-fetch jsonfilter
+nginx luci luci-compat luci-base luci-mod-admin-full luci-mod-system luci-theme-bootstrap
+rpcd rpcd-mod-ucode rpcd-mod-file uhttpd uhttpd-mod-ubus
+firewall4 nftables kmod-tun ip-full kmod-inet-diag
+htop luci-i18n-base-zh-cn
+ttyd luci-app-ttyd
