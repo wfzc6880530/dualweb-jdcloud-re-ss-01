@@ -1,10 +1,10 @@
-name: Build JDCloud RE-SS-01 DualWeb
+name: Build JDCloud RE-SS-01 DualWeb (OpenWrt)
 
 on:
   workflow_dispatch:
     inputs:
       release:
-        description: 'ImmortalWrt release directory (e.g. 25.12-SNAPSHOT)'
+        description: 'OpenWrt release directory (e.g. 25.12-SNAPSHOT)'
         required: true
         default: '25.12-SNAPSHOT'
   push:
