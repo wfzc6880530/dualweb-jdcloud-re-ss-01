@@ -40,12 +40,7 @@ mkdir -p "$WORK/imagebuilder"
 tar --zstd -xf "$WORK/$IB" -C "$WORK/imagebuilder" --strip-components=1
 IBDIR="$WORK/imagebuilder"
 
-echo "========== Confirm device profile =========="
-if ! grep -Rqs "$PROFILE" "$IBDIR/target/linux" "$IBDIR/profiles.json" "$IBDIR"; then
-  echo "ERROR: ImageBuilder does not expose profile $PROFILE for $TARGET." >&2
-  exit 1
-fi
-
+echo "========== ImageBuilder profile validation will run via make manifest =========="
 echo "========== Get DualWeb source =========="
 git clone --depth 1 --branch "$DUALWEB_REF" "$DUALWEB_REPO" "$WORK/dualweb"
 test -s "$WORK/dualweb/src/main.go"
