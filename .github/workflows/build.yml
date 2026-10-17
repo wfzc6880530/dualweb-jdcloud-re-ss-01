@@ -16,6 +16,10 @@ on:
       - 'packages.txt'
       - 'README.md'
 
+concurrency:
+  group: jdcloud-dualweb-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
