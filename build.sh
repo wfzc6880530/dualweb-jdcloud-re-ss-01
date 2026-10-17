@@ -22,7 +22,7 @@ URL="${BASE}/${IB}"
 
 if [[ ! -s "$WORK/$IB" ]]; then
   echo "Downloading OpenWrt ImageBuilder: $URL"
-  curl -fL --retry 4 --retry-delay 3 --connect-timeout 30 "$URL" -o "$WORK/$IB"
+  curl --http1.1 -fL --retry 6 --retry-all-errors --retry-delay 3 --connect-timeout 30 "$URL" -o "$WORK/$IB"
 fi
 
 curl -fsSL "${BASE}/sha256sums" -o "$WORK/sha256sums"
