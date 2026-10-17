@@ -1,0 +1,66 @@
+name: Build JDCloud RE-SS-01 DualWeb
+
+on:
+  workflow_dispatch:
+    inputs:
+      release:
+        description: 'ImmortalWrt release directory (e.g. 25.12-SNAPSHOT)'
+        required: true
+        default: '25.12-SNAPSHOT'
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/build.yml'
+      - 'build.sh'
+      - 'packages.txt'
+      - 'README.md'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    env:
+      RELEASE: ${{ inputs.release || '25.12-SNAPSHOT' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential zstd gzip xz-utils curl wget tar git golang-go \
+            python3 python3-setuptools rsync file jq
+          go version
+          bash -n build.sh
+
+      - name: Build firmware
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          bash ./build.sh
+
+      - name: Inspect output and checksums
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          test -s output/SHA256SUMS.txt
+          test -n "$(find output -maxdepth 1 -type f -name '*jdcloud_re-ss-01-initramfs-uImage.itb' -print -quit)"
+          test -n "$(find output -maxdepth 1 -type f -name '*jdcloud_re-ss-01-squashfs-sysupgrade.bin' -print -quit)"
+          cat output/SHA256SUMS.txt
+          find output -maxdepth 1 -type f -printf '%f (%s bytes)\n'
+
+      - name: Upload firmware artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: DualWeb-JDCloud-RE-SS-01-${{ env.RELEASE }}
+          path: output/*
+          if-no-files-found: error
+          retention-days: 30
