@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       release:
-        description: 'OpenWrt release directory (e.g. 25.12-SNAPSHOT)'
+        description: 'OpenWrt release directory or SNAPSHOT'
         required: true
-        default: '25.12-SNAPSHOT'
+        default: 'SNAPSHOT'
   push:
     branches:
       - main
@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     env:
-      RELEASE: ${{ inputs.release || '25.12-SNAPSHOT' }}
+      RELEASE: ${{ inputs.release || 'SNAPSHOT' }}
 
     steps:
       - name: Checkout repository
