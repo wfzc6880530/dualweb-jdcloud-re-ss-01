@@ -5,18 +5,18 @@ ROOT="$(cd "$(dirname "$0")" && pwd)"
 RELEASE="${RELEASE:-25.12-SNAPSHOT}"
 TARGET="qualcommax/ipq60xx"
 PROFILE="jdcloud_re-ss-01"
-BASE="https://downloads.immortalwrt.org/releases/${RELEASE}/targets/${TARGET}"
+BASE="https://downloads.openwrt.org/releases/${RELEASE}/targets/${TARGET}"
 WORK="${ROOT}/work"
 OUT="${ROOT}/output"
 DUALWEB_REPO="${DUALWEB_REPO:-https://github.com/wfzc6880530/dualweb.git}"
 DUALWEB_REF="${DUALWEB_REF:-test/openbox-artifacts}"
 
 mkdir -p "$WORK" "$OUT"
-IB="immortalwrt-imagebuilder-${RELEASE}-qualcommax-ipq60xx.Linux-x86_64.tar.zst"
+IB="openwrt-imagebuilder-${RELEASE}-qualcommax-ipq60xx.Linux-x86_64.tar.zst"
 URL="${BASE}/${IB}"
 
 if [[ ! -s "$WORK/$IB" ]]; then
-  echo "Downloading ImageBuilder: $URL"
+  echo "Downloading OpenWrt ImageBuilder: $URL"
   curl -fL --retry 4 --retry-delay 3 --connect-timeout 30 "$URL" -o "$WORK/$IB"
 fi
 
