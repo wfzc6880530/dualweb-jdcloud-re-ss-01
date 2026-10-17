@@ -21,12 +21,19 @@ if [[ ! -s "$WORK/$IB" ]]; then
 fi
 
 curl -fsSL "${BASE}/sha256sums" -o "$WORK/sha256sums"
-if grep -F " $IB" "$WORK/sha256sums" >/dev/null; then
-  (cd "$WORK" && grep -F " $IB" sha256sums | sha256sum -c -)
-else
+EXPECTED="$(grep -F "$IB" "$WORK/sha256sums" | head -n1 | awk '{print $1}')"
+if [[ -z "$EXPECTED" ]]; then
   echo "ERROR: official checksum entry not found for $IB" >&2
   exit 1
 fi
+ACTUAL="$(sha256sum "$WORK/$IB" | awk '{print $1}')"
+if [[ "$ACTUAL" != "$EXPECTED" ]]; then
+  echo "ERROR: ImageBuilder SHA256 mismatch" >&2
+  echo "expected: $EXPECTED" >&2
+  echo "actual:   $ACTUAL" >&2
+  exit 1
+fi
+echo "ImageBuilder SHA256 verified: $ACTUAL"
 
 rm -rf "$WORK/imagebuilder" "$WORK/dualweb"
 mkdir -p "$WORK/imagebuilder"
