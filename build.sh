@@ -2,17 +2,22 @@
 set -Eeuo pipefail
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
-RELEASE="${RELEASE:-25.12-SNAPSHOT}"
+RELEASE="${RELEASE:-SNAPSHOT}"
 TARGET="qualcommax/ipq60xx"
 PROFILE="jdcloud_re-ss-01"
-BASE="https://downloads.openwrt.org/releases/${RELEASE}/targets/${TARGET}"
+if [[ "$RELEASE" == "SNAPSHOT" ]]; then
+  BASE="https://downloads.openwrt.org/snapshots/targets/${TARGET}"
+  IB="openwrt-imagebuilder-qualcommax-ipq60xx.Linux-x86_64.tar.zst"
+else
+  BASE="https://downloads.openwrt.org/releases/${RELEASE}/targets/${TARGET}"
+  IB="openwrt-imagebuilder-${RELEASE}-qualcommax-ipq60xx.Linux-x86_64.tar.zst"
+fi
 WORK="${ROOT}/work"
 OUT="${ROOT}/output"
 DUALWEB_REPO="${DUALWEB_REPO:-https://github.com/wfzc6880530/dualweb.git}"
 DUALWEB_REF="${DUALWEB_REF:-test/openbox-artifacts}"
 
 mkdir -p "$WORK" "$OUT"
-IB="openwrt-imagebuilder-${RELEASE}-qualcommax-ipq60xx.Linux-x86_64.tar.zst"
 URL="${BASE}/${IB}"
 
 if [[ ! -s "$WORK/$IB" ]]; then
