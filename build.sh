@@ -66,7 +66,7 @@ chmod 0755 "$IBDIR/files/etc/init.d/dualweb-firstboot"
 chmod 0755 "$IBDIR/files/usr/sbin/dualweb-firstboot-packages"
 chmod 0755 "$IBDIR/files/usr/sbin/dualweb-api"
 
-PACKAGES="$(grep -vE '^[[:space:]]*(#|$)' "$ROOT/packages.txt" | tr '\\n' ' ' | xargs)"
+PACKAGES="$(grep -vE '^[[:space:]]*(#|$)' "$ROOT/packages.txt" | xargs)"
 echo "========== Validate package manifest =========="
 make -C "$IBDIR" manifest PROFILE="$PROFILE" PACKAGES="$PACKAGES"
 
