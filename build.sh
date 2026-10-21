@@ -6,11 +6,11 @@ RELEASE="${RELEASE:-SNAPSHOT}"
 TARGET="qualcommax/ipq60xx"
 PROFILE="jdcloud_re-ss-01"
 if [[ "$RELEASE" == "SNAPSHOT" ]]; then
-  BASE="https://downloads.openwrt.org/snapshots/targets/${TARGET}"
-  IB="openwrt-imagebuilder-qualcommax-ipq60xx.Linux-x86_64.tar.zst"
+  BASE="https://downloads.immortalwrt.org/snapshots/targets/${TARGET}"
+  IB="immortalwrt-imagebuilder-qualcommax-ipq60xx.Linux-x86_64.tar.zst"
 else
-  BASE="https://downloads.openwrt.org/releases/${RELEASE}/targets/${TARGET}"
-  IB="openwrt-imagebuilder-${RELEASE}-qualcommax-ipq60xx.Linux-x86_64.tar.zst"
+  BASE="https://downloads.immortalwrt.org/releases/${RELEASE}/targets/${TARGET}"
+  IB="immortalwrt-imagebuilder-${RELEASE}-qualcommax-ipq60xx.Linux-x86_64.tar.zst"
 fi
 WORK="${ROOT}/work"
 OUT="${ROOT}/output"
