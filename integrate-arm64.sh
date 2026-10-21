@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
-SRC="\${1:?DualWeb source directory required}"
-IBDIR="\${2:?ImageBuilder directory required}"
-WORK="\${3:?Work directory required}"
+SRC="${1:?DualWeb source directory required}"
+IBDIR="${2:?ImageBuilder directory required}"
+WORK="${3:?Work directory required}"
 OVERLAY="$SRC/overlay"
 PACKAGES="$IBDIR/packages"
 mkdir -p "$PACKAGES" "$OVERLAY/etc/openclash/core" "$OVERLAY/etc/dualweb"
@@ -10,13 +10,13 @@ download() { local url="$1" out="$2"; [[ -s "$out" ]] || curl --http1.1 -fL --re
 
 echo "========== Integrate ARM64 OpenClash =========="
 OC_VERSION="v0.48.002"; OC_APK="luci-app-openclash-0.48.002.apk"
-OC_URL="https://github.com/vernesong/OpenClash/releases/download/\${OC_VERSION}/\${OC_APK}"
+OC_URL="https://github.com/vernesong/OpenClash/releases/download/${OC_VERSION}/${OC_APK}"
 OC_SHA="f7ebbd43f9be15c5e6df26e5d0c03d50d0bb8f7fa4cc0d2c2bf048b08c0b155b"
 download "$OC_URL" "$WORK/$OC_APK"
 printf '%s  %s\n' "$OC_SHA" "$WORK/$OC_APK" | sha256sum -c -
 cp -f "$WORK/$OC_APK" "$PACKAGES/$OC_APK"
-MIHOMO_VERSION="v1.19.32"; MIHOMO_ARCHIVE="mihomo-linux-arm64-v1-\${MIHOMO_VERSION}.gz"
-download "https://github.com/MetaCubeX/mihomo/releases/download/\${MIHOMO_VERSION}/\${MIHOMO_ARCHIVE}" "$WORK/$MIHOMO_ARCHIVE"
+MIHOMO_VERSION="v1.19.32"; MIHOMO_ARCHIVE="mihomo-linux-arm64-v1-${MIHOMO_VERSION}.gz"
+download "https://github.com/MetaCubeX/mihomo/releases/download/${MIHOMO_VERSION}/${MIHOMO_ARCHIVE}" "$WORK/$MIHOMO_ARCHIVE"
 gzip -t "$WORK/$MIHOMO_ARCHIVE"
 gzip -dc "$WORK/$MIHOMO_ARCHIVE" > "$OVERLAY/etc/openclash/core/clash_meta"
 chmod 0755 "$OVERLAY/etc/openclash/core/clash_meta"
@@ -25,7 +25,7 @@ readelf -h "$OVERLAY/etc/openclash/core/clash_meta" | grep -Eq 'Machine:.*AArch6
 
 echo "========== Integrate Vantage theme =========="
 VANTAGE_VERSION="v1.0.9"
-VANTAGE_BASE="https://github.com/anothaDev/luci-theme-vantage/releases/download/\${VANTAGE_VERSION}"
+VANTAGE_BASE="https://github.com/anothaDev/luci-theme-vantage/releases/download/${VANTAGE_VERSION}"
 VANTAGE_OK=1
 while IFS='|' read -r asset expected_sha; do
   [[ -n "$asset" ]] || continue
@@ -43,12 +43,12 @@ touch "$OVERLAY/etc/dualweb/.vantage-installed"
 chmod 0644 "$OVERLAY/etc/dualweb/.vantage-installed"
 
 echo "========== Integrate ARM64 Open-Box runtime =========="
-OPENBOX_VERSION="\${OPENBOX_VERSION:-v0.1.341}"
+OPENBOX_VERSION="${OPENBOX_VERSION:-v0.1.341}"
 OPENBOX_ARCHIVE="open-box-linux-arm64.tar.gz"
-OPENBOX_BASE="https://github.com/liandu2024/Open-Box/releases/download/\${OPENBOX_VERSION}"
-download "\${OPENBOX_BASE}/\${OPENBOX_ARCHIVE}" "$WORK/$OPENBOX_ARCHIVE"
-download "\${OPENBOX_BASE}/\${OPENBOX_ARCHIVE}.sha256" "$WORK/\${OPENBOX_ARCHIVE}.sha256"
-(cd "$WORK" && sha256sum -c "\${OPENBOX_ARCHIVE}.sha256")
+OPENBOX_BASE="https://github.com/liandu2024/Open-Box/releases/download/${OPENBOX_VERSION}"
+download "${OPENBOX_BASE}/${OPENBOX_ARCHIVE}" "$WORK/$OPENBOX_ARCHIVE"
+download "${OPENBOX_BASE}/${OPENBOX_ARCHIVE}.sha256" "$WORK/${OPENBOX_ARCHIVE}.sha256"
+(cd "$WORK" && sha256sum -c "${OPENBOX_ARCHIVE}.sha256")
 tar -tzf "$WORK/$OPENBOX_ARCHIVE" >/dev/null
 OPENBOX_ROOT="$OVERLAY/opt/open-box"
 rm -rf "$OPENBOX_ROOT"; mkdir -p "$OPENBOX_ROOT"
@@ -117,7 +117,7 @@ printf '%s\n' 'set $openbox_backend http://127.0.0.1:3036;' > "$OVERLAY/etc/dual
 printf '3036\n' > "$OVERLAY/etc/dualweb/openbox-lite-backend-port"
 
 echo "========== Integrate Zashboard on port 80 =========="
-ZASHBOARD_URL="\${ZASHBOARD_URL:-https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip}"
+ZASHBOARD_URL="${ZASHBOARD_URL:-https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip}"
 ZASHBOARD_ZIP="$WORK/zashboard-dist.zip"; ZASHBOARD_DIR="$WORK/zashboard-dist"
 download "$ZASHBOARD_URL" "$ZASHBOARD_ZIP"
 unzip -tq "$ZASHBOARD_ZIP"
