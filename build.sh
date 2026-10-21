@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
-RELEASE="${RELEASE:-25.12.2}"
+RELEASE="${RELEASE:-SNAPSHOT}"
 TARGET="qualcommax/ipq60xx"
 PROFILE="jdcloud_re-ss-01"
 if [[ "$RELEASE" == "SNAPSHOT" ]]; then
@@ -46,7 +46,21 @@ mkdir -p "$WORK/imagebuilder"
 tar --zstd -xf "$WORK/$IB" -C "$WORK/imagebuilder" --strip-components=1
 IBDIR="$WORK/imagebuilder"
 
-echo "========== ImageBuilder profile validation will run via make manifest =========="
+echo "========== Validate ImageBuilder device profile before integration =========="
+PROFILE_LIST="$WORK/imagebuilder-profiles.txt"
+if ! make -C "$IBDIR" info 2>&1 | tee "$PROFILE_LIST"; then
+  echo "ERROR: ImageBuilder make info failed." >&2
+  exit 1
+fi
+if ! grep -Fq "$PROFILE" "$PROFILE_LIST"; then
+  echo "ERROR: profile '$PROFILE' is not present in this ImageBuilder." >&2
+  echo "Available profile names:" >&2
+  grep -E "jdcloud|ipq60xx|Profile" "$PROFILE_LIST" >&2 || cat "$PROFILE_LIST" >&2
+  exit 1
+fi
+echo "Validated profile: $PROFILE"
+echo "========== ImageBuilder repository configuration =========="
+cat "$IBDIR/repositories.conf" 2>/dev/null || true
 echo "========== Get DualWeb source =========="
 git clone --depth 1 --branch "$DUALWEB_REF" "$DUALWEB_REPO" "$WORK/dualweb"
 test -s "$WORK/dualweb/src/main.go"
