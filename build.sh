@@ -52,6 +52,9 @@ git clone --depth 1 --branch "$DUALWEB_REF" "$DUALWEB_REPO" "$WORK/dualweb"
 test -s "$WORK/dualweb/src/main.go"
 test -d "$WORK/dualweb/overlay/www/dualweb"
 
+echo "========== Integrate plugins and port-80 panels =========="
+bash "$ROOT/integrate-arm64.sh" "$WORK/dualweb" "$IBDIR" "$WORK"
+
 echo "========== Build ARM64 DualWeb API =========="
 if ! command -v go >/dev/null 2>&1; then
   echo "ERROR: Go compiler not installed." >&2
