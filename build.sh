@@ -15,7 +15,7 @@ fi
 WORK="${ROOT}/work"
 OUT="${ROOT}/output"
 DUALWEB_REPO="${DUALWEB_REPO:-https://github.com/wfzc6880530/dualweb.git}"
-DUALWEB_REF="${DUALWEB_REF:-test/openbox-artifacts}"
+DUALWEB_REF="${DUALWEB_REF:-test/2026-10-21-functional-b-scheme}"
 
 mkdir -p "$WORK" "$OUT"
 rm -f "$OUT"/*
