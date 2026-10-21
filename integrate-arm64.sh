@@ -15,7 +15,13 @@ OC_SHA="f7ebbd43f9be15c5e6df26e5d0c03d50d0bb8f7fa4cc0d2c2bf048b08c0b155b"
 download "$OC_URL" "$WORK/$OC_APK"
 printf '%s  %s\n' "$OC_SHA" "$WORK/$OC_APK" | sha256sum -c -
 cp -f "$WORK/$OC_APK" "$PACKAGES/$OC_APK"
-MIHOMO_VERSION="v1.19.32"; MIHOMO_ARCHIVE="mihomo-linux-arm64-v1-${MIHOMO_VERSION}.gz"
+echo "Resolving latest stable Mihomo release for linux/arm64 ..."
+MIHOMO_RELEASE_JSON="$WORK/mihomo-release.json"
+download "https://api.github.com/repos/MetaCubeX/mihomo/releases/latest" "$MIHOMO_RELEASE_JSON"
+MIHOMO_VERSION="$(jq -r '.tag_name // empty' "$MIHOMO_RELEASE_JSON")"
+[[ -n "$MIHOMO_VERSION" ]] || { echo "ERROR: Cannot resolve latest Mihomo release tag." >&2; exit 1; }
+MIHOMO_ARCHIVE="$(jq -r --arg tag "$MIHOMO_VERSION" '.assets[].name | select(. == ("mihomo-linux-arm64-" + $tag + ".gz"))' "$MIHOMO_RELEASE_JSON" | head -n1)"
+[[ -n "$MIHOMO_ARCHIVE" ]] || { echo "ERROR: Latest Mihomo release has no linux/arm64 gzip asset: $MIHOMO_VERSION" >&2; exit 1; }
 download "https://github.com/MetaCubeX/mihomo/releases/download/${MIHOMO_VERSION}/${MIHOMO_ARCHIVE}" "$WORK/$MIHOMO_ARCHIVE"
 gzip -t "$WORK/$MIHOMO_ARCHIVE"
 gzip -dc "$WORK/$MIHOMO_ARCHIVE" > "$OVERLAY/etc/openclash/core/clash_meta"
