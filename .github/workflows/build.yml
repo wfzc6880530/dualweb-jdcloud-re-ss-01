@@ -14,6 +14,7 @@ on:
     paths:
       - '.github/workflows/build.yml'
       - 'build.sh'
+      - 'integrate-arm64.sh'
       - 'packages.txt'
       - 'README.md'
 
