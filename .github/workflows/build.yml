@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       release:
-        description: 'OpenWrt release directory or SNAPSHOT'
+        description: 'ImmortalWrt release version (recommended: 25.12.2)'
         required: true
-        default: 'SNAPSHOT'
+        default: '25.12.2'
   push:
     branches:
       - main
@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     env:
-      RELEASE: ${{ inputs.release || 'SNAPSHOT' }}
+      RELEASE: ${{ inputs.release || '25.12.2' }}
 
     steps:
       - name: Checkout repository
