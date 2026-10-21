@@ -1,5 +1,6 @@
-# OpenWrt Snapshot APK packages for JDCloud RE-SS-01 (ARM64 / qualcommax-ipq60xx).
-# OpenClash/Vantage APKs and Open-Box ARM64 runtime are staged by integrate-arm64.sh.
+# ImmortalWrt Snapshot APK packages for JDCloud RE-SS-01 (aarch64_cortex-a53 / qualcommax-ipq60xx).
+# OpenClash/Mihomo/Vantage assets and Open-Box ARM64 runtime are staged by integrate-arm64.sh.
+# PassWall, NPS/NPC, vlmcsd and LuCI packages resolve from matching ImmortalWrt Snapshot feeds.
 base-files ca-bundle ca-certificates curl wget-ssl busybox uci uclient-fetch jsonfilter
 nginx luci luci-compat luci-base luci-mod-admin-full luci-mod-system luci-theme-bootstrap luci-i18n-base-zh-cn
 rpcd rpcd-mod-ucode rpcd-mod-file uhttpd uhttpd-mod-ubus
