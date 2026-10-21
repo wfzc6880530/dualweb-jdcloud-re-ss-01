@@ -92,6 +92,14 @@ chmod 0755 "$IBDIR/files/usr/sbin/dualweb-firstboot-packages"
 chmod 0755 "$IBDIR/files/usr/sbin/dualweb-api"
 
 PACKAGES="$(grep -vE '^[[:space:]]*(#|$)' "$ROOT/packages.txt" | xargs)"
+# The rolling Snapshot target feed currently publishes procd-ujail with a
+# libubus ABI dependency that is absent from the matching base feed index.
+# ujail is an optional sandbox helper, not the procd init manager itself.
+# Exclude only this optional package so the resolver can select consistent
+# library dependencies; do not drop any requested UI/proxy/plugin packages.
+PACKAGES="$PACKAGES -procd-ujail"
+echo "========== Package selection (including Snapshot ABI workaround) =========="
+printf '%s\n' "$PACKAGES"
 echo "========== Validate package manifest =========="
 make -C "$IBDIR" manifest PROFILE="$PROFILE" PACKAGES="$PACKAGES"
 
