@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
-RELEASE="${RELEASE:-SNAPSHOT}"
+RELEASE="${RELEASE:-25.12.2}"
 TARGET="qualcommax/ipq60xx"
 PROFILE="jdcloud_re-ss-01"
 if [[ "$RELEASE" == "SNAPSHOT" ]]; then
